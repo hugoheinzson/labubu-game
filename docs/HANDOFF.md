@@ -6,7 +6,7 @@ Stand: 13.11.2026. Die App ist ein privates iPad-Spiel für Clara. Sie soll ohne
 
 - Aktiver Entwicklungsbranch: `claude/labubu-app-overview-812111`.
 - Zugehöriger Worktree, relativ zum Hauptcheckout: `.claude/worktrees/labubu-app-overview-812111`.
-- `main` enthält weiterhin das alte Grundgerüst. Im Hauptcheckout liegen zusätzlich separate, nicht committete Änderungen des Nutzers und Grafikdateien. Nicht ungeprüft zurücksetzen, überschreiben oder mit diesem Worktree vermischen. Vor weiterer Arbeit `git worktree list`, `git status --short` und den aktuellen Branch prüfen.
+- GitHub `main` enthält nach Veröffentlichung diesen vollständigen Übergabestand. Der **lokale** Hauptcheckout liegt weiterhin auf dem alten `main` und enthält separate, nicht committete Änderungen des Nutzers und Grafikdateien. Nicht ungeprüft zurücksetzen, überschreiben oder mit diesem Worktree vermischen. Vor weiterer Arbeit `git worktree list`, `git status --short` und den aktuellen Branch prüfen. Bei einem frischen Klon von GitHub kann direkt auf `main` gearbeitet werden.
 - Die lauffähige App liegt als `Labubu.xcodeproj` im Entwicklungsworktree. Ihre Spiellogik kommt aus dem lokalen Swift Package unter `Sources/LabubuApp/`. `project.yml` ist die Quelle für XcodeGen; nach Projektstruktur-Änderungen das Projekt neu erzeugen.
 
 ## Umgesetztes Verhalten

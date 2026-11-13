@@ -118,4 +118,4 @@ Zielgruppe, Spielidee und Wochenplan bis Weihnachten: [docs/KONZEPT.md](docs/KON
 
 ## Übergabe
 
-Für die Weiterarbeit mit Claude Code: [docs/HANDOFF.md](docs/HANDOFF.md). Der aktuelle Entwicklungsstand liegt im Branch `claude/labubu-app-overview-812111`, nicht im alten `main`.
+Für die Weiterarbeit mit Claude Code: [docs/HANDOFF.md](docs/HANDOFF.md). Der aktuelle Stand wird auf GitHub unter `main` veröffentlicht. Der lokale Entwicklungs-Worktree verwendet den Branch `claude/labubu-app-overview-812111`; der separate lokale Hauptcheckout kann noch einen älteren Stand enthalten.

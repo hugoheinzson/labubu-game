@@ -8,21 +8,15 @@ struct EggView: View {
     var body: some View {
         ZStack {
             background
-            VStack(spacing: 32) {
-                Text("Labubu Ei")
-                    .font(.largeTitle.weight(.semibold))
-                Spacer()
-                egg
-                Spacer()
-                statusPanel
-            }
-            .padding(48)
+            content
+                .padding(48)
         }
         .onTapGesture {
+            guard viewModel.state.stage != .hatched else { return }
             triggerWobble()
             viewModel.careForEgg()
         }
-        .animation(.easeOut(duration: 0.25), value: viewModel.stageDescription())
+        .animation(.easeOut(duration: 0.25), value: viewModel.state.stage)
     }
 
     private var background: some View {
@@ -34,15 +28,37 @@ struct EggView: View {
         .ignoresSafeArea()
     }
 
-    private var egg: some View {
-        Image(systemName: "egg.fill")
+    @ViewBuilder
+    private var content: some View {
+        switch viewModel.state.stage {
+        case .hatched:
+            hatchedScene
+        case .egg, .incubating:
+            eggScene(for: viewModel.state.stage)
+        }
+    }
+
+    private func eggScene(for stage: HatchStage) -> some View {
+        VStack(spacing: 32) {
+            Text(stage == .egg ? "Labubu Ei" : "Ei öffnet sich")
+                .font(.largeTitle.weight(.semibold))
+            Spacer()
+            eggImage(for: stage)
+            Spacer()
+            statusPanel
+        }
+    }
+
+    private func eggImage(for stage: HatchStage) -> some View {
+        let assetName = stage == .egg ? "EggClosed" : "EggIncubating"
+        return artwork(assetName, fallbackSymbol: "oval.portrait.fill")
             .resizable()
             .scaledToFit()
             .foregroundStyle(.white)
-            .frame(width: 240, height: 320)
-            .rotationEffect(.degrees(wobbleRotation))
-            .scaleEffect(eggScale)
-            .shadow(color: .black.opacity(0.2), radius: 20, y: 16)
+            .frame(width: 420, height: 300)
+            .rotationEffect(.degrees(stage == .egg ? wobbleRotation : wobbleRotation * 0.2))
+            .scaleEffect(stage == .egg ? eggScale : 1.02)
+            .shadow(color: .black.opacity(0.15), radius: 30, y: 18)
     }
 
     private var statusPanel: some View {
@@ -57,7 +73,7 @@ struct EggView: View {
                 .tint(.orange)
             Text(viewModel.warmthLabel())
                 .font(.footnote)
-            Text("Tipp: Tippe auf das Ei, um es zu wärmen und zu pflegen.")
+            Text(instructionText)
                 .font(.footnote)
                 .multilineTextAlignment(.center)
                 .padding(.top, 8)
@@ -65,6 +81,42 @@ struct EggView: View {
         .padding()
         .frame(maxWidth: 400)
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+    }
+
+    private var hatchedScene: some View {
+        VStack(spacing: 32) {
+            Text("Baby Labubu ist geschlüpft!")
+                .font(.largeTitle.weight(.bold))
+            artwork("BabyLabubu", fallbackSymbol: "teddybear.fill")
+                .resizable()
+                .scaledToFit()
+                .foregroundStyle(.white)
+                .frame(maxWidth: 480)
+                .shadow(color: .black.opacity(0.2), radius: 25, y: 20)
+            Text("Weiter pflegen, damit es glücklich bleibt.")
+                .font(.title3)
+            statusPanel
+        }
+    }
+
+    /// Lädt ein Bild aus `Resources`. Fehlt es, wird ein SF-Symbol als Platzhalter gezeigt,
+    /// damit die App auch ohne fertige Grafiken spielbar bleibt.
+    private func artwork(_ name: String, fallbackSymbol: String) -> Image {
+        if let image = UIImage(named: name, in: .module, compatibleWith: nil) {
+            return Image(uiImage: image)
+        }
+        return Image(systemName: fallbackSymbol)
+    }
+
+    private var instructionText: String {
+        switch viewModel.state.stage {
+        case .egg:
+            return "Tipp: Tippe auf das Ei, damit es wackelt und warm wird."
+        case .incubating:
+            return "Noch etwas wärmen, dann schlüpft Labubu!"
+        case .hatched:
+            return "Labubu ist da – jetzt beginnt die Pflege."
+        }
     }
 
     private func triggerWobble() {
@@ -83,7 +135,6 @@ struct EggView: View {
     }
 }
 
-#Preview("EggView iPad") {
+#Preview("EggView iPad", traits: .landscapeLeft) {
     EggView(viewModel: LabubuViewModel())
-        .previewInterfaceOrientation(.landscapeLeft)
 }

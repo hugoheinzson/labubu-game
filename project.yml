@@ -1,0 +1,35 @@
+name: Labubu
+options:
+  bundleIdPrefix: com.labubu
+  deploymentTarget:
+    iOS: "17.0"
+packages:
+  Labubu:
+    path: .
+targets:
+  LabubuGame:
+    type: application
+    platform: iOS
+    sources:
+      - App
+    dependencies:
+      - package: Labubu
+        product: LabubuApp
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: Labubu
+        UILaunchScreen: {}
+        UIRequiresFullScreen: true
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.labubu.game
+        TARGETED_DEVICE_FAMILY: "2"
+        MARKETING_VERSION: "0.1"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: NO

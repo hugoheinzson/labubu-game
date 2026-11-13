@@ -1,28 +1,49 @@
-# Labubu iPad App Skeleton
+# Labubu iPad App
 
-Grundstruktur für ein SwiftUI-basiertes "Art Tamagotchi"-Spiel, ausgelegt auf iPad-only. Das Projekt ist als Swift Package organisiert und kann in ein Xcode-App-Projekt importiert oder dort als separates Modul verwendet werden.
+SwiftUI-basiertes "Art Tamagotchi"-Spiel, nur für iPad (iOS 17+). Man wärmt und pflegt ein Ei, bis ein Baby-Labubu schlüpft.
 
-## Zielplattform: iPadOS
-- `Package.swift` setzt das Deployment Target auf iOS 17+, wodurch SwiftUI-Features wie das neue Preview-System verfügbar sind.
-- Sobald du ein Xcode-App-Projekt erzeugst, stelle unter *Build Settings → Deployment Info* `iPad` als einzige Gerätefamilie ein (`UIDeviceFamily = 2`).
-- Optionale Schritte für iPad-Erlebnis: Multitasking erlauben/deaktivieren, Pointer-Interaktionen, größere Schriftgrößen.
+## Starten
 
-## Struktur
+Das Xcode-Projekt wird mit [XcodeGen](https://github.com/yonaskolb/XcodeGen) aus `project.yml` erzeugt. Nach Änderungen an `project.yml`:
+
+```bash
+xcodegen generate
 ```
+
+Dann `Labubu.xcodeproj` öffnen, Schema **LabubuGame** und einen iPad-Simulator wählen, ⌘R.
+
+Für ein echtes iPad: im Target *LabubuGame → Signing & Capabilities* das eigene Team wählen und ggf. die Bundle-ID (`com.labubu.game`) anpassen.
+
+## Aufbau
+
+Die App ist zweigeteilt:
+
+- **`App/`** – die eigentliche iOS-App (nur der `@main`-Einstieg).
+- **`Sources/LabubuApp/`** – Swift Package mit der gesamten Spiellogik und allen Views. Die App bindet es als lokales Package ein.
+
+```
+App/
+└── LabubuGameApp.swift      // @main, zeigt LabubuRootView
 Sources/LabubuApp/
-├── LabubuApp.swift        // @main Entry Point
+├── LabubuRootView.swift     // öffentliche Einstiegs-View des Packages
 ├── Models/
-│   └── LabubuState.swift  // Zustand des Eis / Labubu
+│   └── LabubuState.swift    // Zustand: Wärme, Pflege, Phase (Ei → Wärmen → Geschlüpft)
 ├── ViewModels/
 │   └── LabubuViewModel.swift
 ├── Views/
-│   └── EggView.swift      // Einstiegsszene mit Animation
+│   └── EggView.swift        // Ei-Szene mit Wackel-Animation + Baby-Labubu-Endzustand
 └── Resources/
-    └── README.md          // Hinweise für Assets
+    └── README.md            // welche Bilder erwartet werden
+project.yml                  // XcodeGen-Konfiguration (iPad only)
 ```
 
+## Grafiken
+
+Die App erwartet `EggClosed.png`, `EggIncubating.png` und `BabyLabubu.png` in `Sources/LabubuApp/Resources/` (Details dort im README). Fehlt ein Bild, zeigt sie ein SF-Symbol als Platzhalter – die App bleibt also spielbar.
+
 ## Nächste Schritte
-1. Eigene Assets in `Resources` oder ein `Assets.xcassets` hinzufügen.
-2. Weitere Views (Mini-Games, Aufgabenlisten) ergänzen und per Navigation aus `EggView` erreichbar machen.
-3. Game-Logic erweitern: Wärmesystem, Pflegeaufgaben, Timer, Rewards.
-4. Xcode-App-Projekt erstellen (`File > New > Project > App`) und dieses Package als lokale Abhängigkeit einbinden.
+
+1. Echte Grafiken erstellen und ablegen.
+2. Spielstand speichern (aktuell beginnt jeder Start wieder beim kalten Ei).
+3. Pflege nach dem Schlüpfen: Bedürfnisse (Hunger, Laune, Müdigkeit), Füttern, Streicheln.
+4. Mini-Games, Belohnungen/Sticker.

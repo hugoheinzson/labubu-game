@@ -41,6 +41,10 @@ project.yml                  // XcodeGen-Konfiguration (iPad only)
 
 Die App erwartet `EggClosed.png`, `EggIncubating.png` und `BabyLabubu.png` in `Sources/LabubuApp/Resources/` (Details dort im README). Fehlt ein Bild, zeigt sie ein SF-Symbol als Platzhalter – die App bleibt also spielbar.
 
+## Konzept & Fahrplan
+
+Zielgruppe, Spielidee und Wochenplan bis Weihnachten: [docs/KONZEPT.md](docs/KONZEPT.md).
+
 ## Nächste Schritte
 
 1. Echte Grafiken erstellen und ablegen.

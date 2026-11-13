@@ -13,9 +13,10 @@ struct RoomBackground: View {
             ZStack {
                 LinearGradient(colors: [Color(red: 1, green: 0.88, blue: 0.9), Color(red: 0.95, green: 0.85, blue: 1)],
                                startPoint: .top, endPoint: .bottom)
+                let windowSize = min(w * 0.28, 260)
                 window
-                    .frame(width: min(w * 0.28, 260), height: min(w * 0.28, 260) * 1.1)
-                    .position(x: w * 0.2, y: h * 0.2)
+                    .frame(width: windowSize, height: windowSize * 1.1)
+                    .position(x: w * 0.2, y: max(h * 0.2, 150 + windowSize * 0.55))
                 // Boden
                 Rectangle()
                     .fill(LinearGradient(colors: [Color(red: 0.98, green: 0.86, blue: 0.74), Color(red: 0.93, green: 0.78, blue: 0.66)],

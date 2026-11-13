@@ -52,6 +52,22 @@ final class LabubuViewModel: ObservableObject {
         }
     }
 
+    // MARK: Kleiderschrank
+
+    /// Antippen im Kleiderschrank: kaufen (falls nötig), dann an- bzw. ausziehen.
+    enum WardrobeResult { case putOn, tookOff, bought, tooExpensive }
+
+    func useWardrobeItem(_ item: OutfitItem) -> WardrobeResult {
+        if state.isWearing(item) {
+            state.takeOff(item.slot)
+            return .tookOff
+        }
+        let wasOwned = state.owns(item)
+        guard state.buy(item) else { return .tooExpensive }
+        state.wear(item)
+        return wasOwned ? .putOn : .bought
+    }
+
     // MARK: Eltern-Bereich
 
     func resetGame() {
@@ -60,5 +76,9 @@ final class LabubuViewModel: ObservableObject {
 
     func drainNeedsForTesting() {
         state.drainNeedsForTesting()
+    }
+
+    func addStarsForTesting() {
+        state.addStarsForTesting(10)
     }
 }

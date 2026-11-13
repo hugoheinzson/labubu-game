@@ -90,3 +90,32 @@ for i in range(n):
     buzz = math.sin(2 * math.pi * 85 * t) * 0.5 + lp * 3
     s.append(buzz * math.sin(math.pi * t / 1.2) ** 2 * 0.5)
 write("snore", s)
+
+# Stern: helles "Pling" – ein Stern verdient
+s = []
+n = int(SR * 0.45)
+for i in range(n):
+    t = i / SR
+    tone = math.sin(2 * math.pi * 1568 * t) * 0.6 + math.sin(2 * math.pi * 2349 * t) * 0.4 * math.exp(-8 * t)
+    s.append(tone * env(i, n, attack=0.003, decay=5))
+write("star", s)
+
+# Freischalten: schnelles Arpeggio nach oben mit Glitzer – Kleidungsstück gekauft
+s = []
+for f in (1318.5, 1568, 2093, 2637):
+    n = int(SR * 0.07)
+    for i in range(n):
+        s.append(math.sin(2 * math.pi * f * i / SR) * env(i, n, attack=0.004, decay=2.5))
+n = int(SR * 0.35)
+for i in range(n):
+    t = i / SR
+    s.append(math.sin(2 * math.pi * (3136 + 300 * math.sin(50 * t)) * t) * 0.3 * math.exp(-7 * t))
+write("unlock", s)
+
+# Wusch: gefiltertes Rauschen, das in der Tonhöhe steigt – anziehen
+n = int(SR * 0.25); s = []; lp = 0
+for i in range(n):
+    k = 0.05 + 0.5 * (i / n)
+    lp += k * (random.uniform(-1, 1) - lp)
+    s.append(lp * math.sin(math.pi * i / n))
+write("swish", s)

@@ -28,6 +28,7 @@ struct GameView: View {
         .confirmationDialog("Eltern-Bereich", isPresented: $showParentMenu, titleVisibility: .visible) {
             if viewModel.state.stage == .hatched {
                 Button("Bedürfnisse leeren (zum Testen)") { viewModel.drainNeedsForTesting() }
+                Button("10 Sterne geben (zum Testen)") { viewModel.addStarsForTesting() }
             }
             Button("Spiel zurücksetzen (neues Ei)", role: .destructive) { viewModel.resetGame() }
             Button("Abbrechen", role: .cancel) {}

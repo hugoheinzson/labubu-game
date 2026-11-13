@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		28F63ACCCEA2DA98F01CCAFA /* LabubuApp in Frameworks */ = {isa = PBXBuildFile; productRef = AE39B8FBDA18167C04400DD5 /* LabubuApp */; };
 		2BA8990BAA6C3FB1448D9380 /* LabubuApp in Frameworks */ = {isa = PBXBuildFile; productRef = 97355D889709586E6D5DAFE9 /* LabubuApp */; };
+		35D1A6F08AF12652FFC5AC96 /* StarsAndWardrobeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615E3F880A6E9FF9C06680A3 /* StarsAndWardrobeTests.swift */; };
 		7575B7619268072B68EF0A2A /* LabubuStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FBA6BBA8FCD4F55AEEE2DE /* LabubuStateTests.swift */; };
 		97EC0832237AF0CDC6FB4194 /* NeedsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E1C8CE05910997901E849D /* NeedsTests.swift */; };
 		9A348EC7A427567CD6575D45 /* LabubuGameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811FDA748C3B7F71166A61B /* LabubuGameApp.swift */; };
@@ -27,6 +28,7 @@
 /* Begin PBXFileReference section */
 		279CD770ED2E002E4BA02A03 /* LabubuGameTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LabubuGameTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		38EF55D81F05FAE7599DF179 /* LabubuGame.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LabubuGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		615E3F880A6E9FF9C06680A3 /* StarsAndWardrobeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarsAndWardrobeTests.swift; sourceTree = "<group>"; };
 		62FBA6BBA8FCD4F55AEEE2DE /* LabubuStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabubuStateTests.swift; sourceTree = "<group>"; };
 		A8E1C8CE05910997901E849D /* NeedsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeedsTests.swift; sourceTree = "<group>"; };
 		B811FDA748C3B7F71166A61B /* LabubuGameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabubuGameApp.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 			children = (
 				62FBA6BBA8FCD4F55AEEE2DE /* LabubuStateTests.swift */,
 				A8E1C8CE05910997901E849D /* NeedsTests.swift */,
+				615E3F880A6E9FF9C06680A3 /* StarsAndWardrobeTests.swift */,
 			);
 			name = LabubuAppTests;
 			path = Tests/LabubuAppTests;
@@ -183,6 +186,7 @@
 			files = (
 				7575B7619268072B68EF0A2A /* LabubuStateTests.swift in Sources */,
 				97EC0832237AF0CDC6FB4194 /* NeedsTests.swift in Sources */,
+				35D1A6F08AF12652FFC5AC96 /* StarsAndWardrobeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

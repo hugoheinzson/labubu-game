@@ -27,6 +27,22 @@ struct LabubuState: Codable, Equatable {
     private(set) var needsUpdatedAt: Date?
     private(set) var sleepingSince: Date?
 
+    // Sterne & Kleiderschrank
+    private(set) var stars: Int = 0
+    private(set) var ownedItems: Set<String> = OutfitItem.freeItemIDs
+    /// Getragene Teile: Slot (rawValue) → Item-ID. String-Schlüssel, damit das JSON lesbar bleibt.
+    private(set) var worn: [String: String] = [:]
+    /// Zählt Streicheleinheiten bis zum nächsten Stern.
+    private(set) var petsTowardStar: Int = 0
+    /// Labubu ging müde ins Bett – nach dem Ausschlafen gibt es Sterne.
+    private(set) var sleepRewardPending = false
+
+    /// Startguthaben nach dem Schlüpfen, damit gleich etwas freigeschaltet werden kann.
+    static let hatchBonusStars = 3
+    static let starsPerMeal = 1
+    static let petsPerStar = 4
+    static let starsPerGoodSleep = 2
+
     /// Wie viel ein Essen satt macht.
     static let mealSize = 0.25
     /// Wie viel einmal Streicheln/Kitzeln fröhlich macht.
@@ -64,6 +80,7 @@ struct LabubuState: Codable, Equatable {
         hatchedAt = date
         needs = .newborn
         needsUpdatedAt = date
+        stars += Self.hatchBonusStars
     }
 
     // MARK: - Pflege
@@ -105,25 +122,71 @@ struct LabubuState: Codable, Equatable {
         guard stage == .hatched, !isSleeping, needs.hunger < 0.95 else { return false }
         needs.hunger += Self.mealSize
         needs.clamp()
+        stars += Self.starsPerMeal
         return true
     }
 
+    /// Sterne gibt es nur, solange Labubu noch nicht ganz fröhlich ist – Dauer-Tippen lohnt sich also nicht.
     mutating func pet(at now: Date = Date()) {
         advanceNeeds(to: now)
         guard stage == .hatched, !isSleeping else { return }
+        let wasNeeded = needs.fun < 0.95
         needs.fun += Self.petAmount
         needs.clamp()
+        guard wasNeeded else { return }
+        petsTowardStar += 1
+        if petsTowardStar >= Self.petsPerStar {
+            petsTowardStar = 0
+            stars += 1
+        }
     }
 
     mutating func sleep(at now: Date = Date()) {
         advanceNeeds(to: now)
         guard stage == .hatched, !isSleeping else { return }
         sleepingSince = now
+        sleepRewardPending = needs.energy < 0.6
     }
 
     mutating func wakeUp(at now: Date = Date()) {
         advanceNeeds(to: now)
+        guard isSleeping else { return }
+        if sleepRewardPending && needs.energy >= 0.95 {
+            stars += Self.starsPerGoodSleep
+        }
+        sleepRewardPending = false
         sleepingSince = nil
+    }
+
+    // MARK: - Kleiderschrank
+
+    func owns(_ item: OutfitItem) -> Bool { ownedItems.contains(item.id) }
+
+    func isWearing(_ item: OutfitItem) -> Bool { worn[item.slot.rawValue] == item.id }
+
+    func wornItem(in slot: OutfitSlot) -> OutfitItem? {
+        worn[slot.rawValue].flatMap(OutfitItem.find)
+    }
+
+    /// Kauft ein Teil mit Sternen. `false`, wenn nicht genug Sterne da sind.
+    @discardableResult
+    mutating func buy(_ item: OutfitItem) -> Bool {
+        guard stage == .hatched else { return false }
+        if owns(item) { return true }
+        guard stars >= item.price else { return false }
+        stars -= item.price
+        ownedItems.insert(item.id)
+        return true
+    }
+
+    /// Zieht ein eigenes Teil an (ersetzt, was am selben Platz war).
+    mutating func wear(_ item: OutfitItem) {
+        guard owns(item) else { return }
+        worn[item.slot.rawValue] = item.id
+    }
+
+    mutating func takeOff(_ slot: OutfitSlot) {
+        worn[slot.rawValue] = nil
     }
 
     /// Nur für den Eltern-Bereich: alle Bedürfnisse fast leer, um die Pflege auszuprobieren.
@@ -132,10 +195,17 @@ struct LabubuState: Codable, Equatable {
         needs = Needs(hunger: 0.1, fun: 0.2, energy: 0.15)
         needsUpdatedAt = now
         sleepingSince = nil
+        sleepRewardPending = false
+    }
+
+    /// Nur für den Eltern-Bereich.
+    mutating func addStarsForTesting(_ amount: Int) {
+        guard stage == .hatched else { return }
+        stars += amount
     }
 }
 
-// Spielstände aus Woche 1 kennen die Pflege-Felder noch nicht – dann gelten die Standardwerte.
+// Ältere Spielstände kennen neuere Felder noch nicht – dann gelten die Standardwerte.
 extension LabubuState {
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
@@ -144,5 +214,10 @@ extension LabubuState {
         needs = try c.decodeIfPresent(Needs.self, forKey: .needs) ?? .newborn
         needsUpdatedAt = try c.decodeIfPresent(Date.self, forKey: .needsUpdatedAt) ?? hatchedAt
         sleepingSince = try c.decodeIfPresent(Date.self, forKey: .sleepingSince)
+        stars = try c.decodeIfPresent(Int.self, forKey: .stars) ?? 0
+        ownedItems = (try c.decodeIfPresent(Set<String>.self, forKey: .ownedItems) ?? []).union(OutfitItem.freeItemIDs)
+        worn = try c.decodeIfPresent([String: String].self, forKey: .worn) ?? [:]
+        petsTowardStar = try c.decodeIfPresent(Int.self, forKey: .petsTowardStar) ?? 0
+        sleepRewardPending = try c.decodeIfPresent(Bool.self, forKey: .sleepRewardPending) ?? false
     }
 }

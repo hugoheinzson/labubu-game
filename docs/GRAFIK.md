@@ -36,4 +36,6 @@ Die Stimmungsbilder sind optional. Fehlt eines, zeigt die App `BabyLabubu.png` (
 **Stimmungen** (jeweils mit Referenzbild):
 > Exactly the same character, same pose, same size and framing as the reference image, but [hungry with its mouth wide open | very sleepy with half-closed eyes, yawning | sad with a small tear | fast asleep with closed eyes]. Transparent background, no shadow, no text.
 
-Für später (Woche 3–4) nach demselben Muster: Kleidung (Mütze, Schleife, Brille), weitere Labubus in anderen Fellfarben.
+**Kleidung:** Aktuell sind die Kleidungsstücke Emojis, die über Labubu gelegt werden (Positionen in `Views/Components/OutfitLayer.swift`). Das funktioniert auch mit einem KI-Labubu, die Positionen müssen dann ggf. leicht nachjustiert werden.
+
+Für später (Woche 4) nach demselben Muster: weitere Labubus in anderen Fellfarben.

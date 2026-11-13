@@ -8,17 +8,39 @@
 
 /* Begin PBXBuildFile section */
 		28F63ACCCEA2DA98F01CCAFA /* LabubuApp in Frameworks */ = {isa = PBXBuildFile; productRef = AE39B8FBDA18167C04400DD5 /* LabubuApp */; };
+		2BA8990BAA6C3FB1448D9380 /* LabubuApp in Frameworks */ = {isa = PBXBuildFile; productRef = 97355D889709586E6D5DAFE9 /* LabubuApp */; };
+		7575B7619268072B68EF0A2A /* LabubuStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FBA6BBA8FCD4F55AEEE2DE /* LabubuStateTests.swift */; };
 		9A348EC7A427567CD6575D45 /* LabubuGameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811FDA748C3B7F71166A61B /* LabubuGameApp.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		4B94F4E41109CDE1B6C89FD3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 23A8772AA828CC3108AB1ACF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00D2558F5213F550E63ADFD5;
+			remoteInfo = LabubuGame;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		279CD770ED2E002E4BA02A03 /* LabubuGameTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LabubuGameTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		38EF55D81F05FAE7599DF179 /* LabubuGame.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LabubuGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		62FBA6BBA8FCD4F55AEEE2DE /* LabubuStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabubuStateTests.swift; sourceTree = "<group>"; };
 		B811FDA748C3B7F71166A61B /* LabubuGameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabubuGameApp.swift; sourceTree = "<group>"; };
 		C0A9D0666D54286C5F12BA8C /* labubu-app-overview-812111 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "labubu-app-overview-812111"; path = .; sourceTree = SOURCE_ROOT; };
 		C119E63CE6C9F0361F6C881B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		8B8E0873C3F40FAAC3AAE391 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BA8990BAA6C3FB1448D9380 /* LabubuApp in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D7A55FDFF00EB1D73A97A2F2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -51,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				38EF55D81F05FAE7599DF179 /* LabubuGame.app */,
+				279CD770ED2E002E4BA02A03 /* LabubuGameTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -59,9 +82,19 @@
 			isa = PBXGroup;
 			children = (
 				68D78D53FF1EE20E51988C98 /* App */,
+				E8A19E3A2C87471250B6AB4F /* LabubuAppTests */,
 				08F87F2C379A7C4571A0D31A /* Packages */,
 				74A8A6CC1C8F50148B617556 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		E8A19E3A2C87471250B6AB4F /* LabubuAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				62FBA6BBA8FCD4F55AEEE2DE /* LabubuStateTests.swift */,
+			);
+			name = LabubuAppTests;
+			path = Tests/LabubuAppTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -85,6 +118,26 @@
 			productName = LabubuGame;
 			productReference = 38EF55D81F05FAE7599DF179 /* LabubuGame.app */;
 			productType = "com.apple.product-type.application";
+		};
+		3EB0B2D981492CB7DEE79B0F /* LabubuGameTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A5ABF5A9C757D865DAFE543 /* Build configuration list for PBXNativeTarget "LabubuGameTests" */;
+			buildPhases = (
+				E270BF5E812FB83BABBA53C5 /* Sources */,
+				8B8E0873C3F40FAAC3AAE391 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2205C2F75EDC6C5A225448F5 /* PBXTargetDependency */,
+			);
+			name = LabubuGameTests;
+			packageProductDependencies = (
+				97355D889709586E6D5DAFE9 /* LabubuApp */,
+			);
+			productName = LabubuGameTests;
+			productReference = 279CD770ED2E002E4BA02A03 /* LabubuGameTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -115,11 +168,20 @@
 			projectRoot = "";
 			targets = (
 				00D2558F5213F550E63ADFD5 /* LabubuGame */,
+				3EB0B2D981492CB7DEE79B0F /* LabubuGameTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		E270BF5E812FB83BABBA53C5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7575B7619268072B68EF0A2A /* LabubuStateTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F30637808C6DBB468C48BD74 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -130,7 +192,32 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		2205C2F75EDC6C5A225448F5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00D2558F5213F550E63ADFD5 /* LabubuGame */;
+			targetProxy = 4B94F4E41109CDE1B6C89FD3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		0368F7348D7090596FB0346F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.labubu.LabubuGameTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LabubuGame.app/LabubuGame";
+			};
+			name = Release;
+		};
 		15A2322C392C53252295C615 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -225,6 +312,23 @@
 			};
 			name = Release;
 		};
+		E2DF390807363BC7A2EC8E4A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.labubu.LabubuGameTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LabubuGame.app/LabubuGame";
+			};
+			name = Debug;
+		};
 		E600B842464BD9C9BF00C965 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -309,6 +413,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		7A5ABF5A9C757D865DAFE543 /* Build configuration list for PBXNativeTarget "LabubuGameTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2DF390807363BC7A2EC8E4A /* Debug */,
+				0368F7348D7090596FB0346F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -319,6 +432,10 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		97355D889709586E6D5DAFE9 /* LabubuApp */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LabubuApp;
+		};
 		AE39B8FBDA18167C04400DD5 /* LabubuApp */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LabubuApp;

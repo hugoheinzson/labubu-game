@@ -3,33 +3,27 @@ import Combine
 
 @MainActor
 final class LabubuViewModel: ObservableObject {
-    @Published private(set) var state = LabubuState()
-
-    private var lastCareDate: Date?
-
-    func careForEgg() {
-        let now = Date()
-        let delta = min(now.timeIntervalSince(lastCareDate ?? now), 5)
-        lastCareDate = now
-        state.applyCare(amount: delta / 5)
+    @Published private(set) var state: LabubuState {
+        didSet { store.save(state) }
     }
 
-    func warmthLabel() -> String {
-        "Wärme: \(Int(state.warmth * 100))%"
+    private let store: GameStore
+
+    init(store: GameStore = .standard) {
+        self.store = store
+        self.state = store.load() ?? LabubuState()
     }
 
-    func progressLabel() -> String {
-        "Pflege: \(Int(state.careProgress * 100))%"
+    func tapEgg() {
+        state.tapEgg()
     }
 
-    func stageDescription() -> String {
-        switch state.stage {
-        case .egg:
-            return "Ei"
-        case .incubating:
-            return "Am Wärmen"
-        case .hatched:
-            return "Labubu ist da!"
-        }
+    func finishHatching() {
+        state.finishHatching()
+    }
+
+    /// Nur über den versteckten Eltern-Bereich erreichbar.
+    func resetGame() {
+        state = LabubuState()
     }
 }

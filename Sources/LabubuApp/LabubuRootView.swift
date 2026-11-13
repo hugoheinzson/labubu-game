@@ -8,7 +8,9 @@ public struct LabubuRootView: View {
     public init() {}
 
     public var body: some View {
-        EggView(viewModel: viewModel)
+        GameView(viewModel: viewModel)
             .preferredColorScheme(.light)
+            .persistentSystemOverlays(.hidden)
+            .statusBarHidden()
     }
 }

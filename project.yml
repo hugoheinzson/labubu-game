@@ -9,6 +9,9 @@ packages:
 targets:
   LabubuGame:
     type: application
+    scheme:
+      testTargets:
+        - LabubuGameTests
     platform: iOS
     sources:
       - App
@@ -33,3 +36,16 @@ targets:
         MARKETING_VERSION: "0.1"
         CURRENT_PROJECT_VERSION: "1"
         GENERATE_INFOPLIST_FILE: NO
+  LabubuGameTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - Tests/LabubuAppTests
+    dependencies:
+      - target: LabubuGame
+      - package: Labubu
+        product: LabubuApp
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "2"

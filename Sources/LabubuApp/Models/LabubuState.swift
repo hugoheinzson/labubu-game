@@ -1,30 +1,53 @@
 import Foundation
 
-enum HatchStage: String, Codable, CaseIterable {
+enum HatchStage: String, Codable {
+    /// Ei liegt da und wird angetippt.
     case egg
-    case incubating
+    /// Genug getippt – die Schlüpf-Animation läuft (oder wurde unterbrochen und läuft beim nächsten Start erneut).
+    case hatching
+    /// Labubu ist geschlüpft.
     case hatched
 }
 
-struct LabubuState: Codable {
-    private(set) var warmth: Double = 0
-    private(set) var careProgress: Double = 0
-    private(set) var stage: HatchStage = .egg
+/// Gesamter Spielstand. Wird als JSON gespeichert, daher nur einfache, Codable-Felder.
+struct LabubuState: Codable, Equatable {
+    /// So oft muss das Kind tippen, bis Labubu schlüpft. Jeder Tipp zählt – auch ganz schnelles Tippen.
+    static let tapsToHatch = 18
+    /// Anzahl der Herzen in der Fortschrittsanzeige.
+    static let progressHearts = 6
+    /// Anzahl sichtbarer Riss-Stufen auf dem Ei.
+    static let crackLevels = 3
 
-    mutating func applyCare(amount: Double) {
-        let clamped = max(0, min(1, amount))
-        warmth = min(1, warmth + clamped * 0.6)
-        careProgress = min(1, careProgress + clamped * 0.4)
-        stage = nextStage()
+    private(set) var eggTaps: Int = 0
+    private(set) var hatchedAt: Date?
+
+    var stage: HatchStage {
+        if hatchedAt != nil { return .hatched }
+        return eggTaps >= Self.tapsToHatch ? .hatching : .egg
     }
 
-    private func nextStage() -> HatchStage {
-        if careProgress >= 1 {
-            return .hatched
-        }
-        if warmth >= 0.5 {
-            return .incubating
-        }
-        return .egg
+    /// 0…1
+    var hatchProgress: Double {
+        min(1, Double(eggTaps) / Double(Self.tapsToHatch))
+    }
+
+    /// Wie viele Herzen gefüllt sind (0…progressHearts).
+    var filledHearts: Int {
+        Int(hatchProgress * Double(Self.progressHearts))
+    }
+
+    /// 0 = heil, 1…crackLevels = immer mehr Risse. Der erste Riss erscheint nach einem Viertel der Tipps.
+    var crackLevel: Int {
+        min(Self.crackLevels, Int(hatchProgress * Double(Self.crackLevels + 1)))
+    }
+
+    mutating func tapEgg() {
+        guard stage == .egg else { return }
+        eggTaps += 1
+    }
+
+    mutating func finishHatching(at date: Date = Date()) {
+        guard stage == .hatching else { return }
+        hatchedAt = date
     }
 }

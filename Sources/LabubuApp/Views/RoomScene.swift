@@ -5,11 +5,15 @@ import SwiftUI
 struct RoomScene: View {
     @ObservedObject var viewModel: LabubuViewModel
 
-    @State private var labubuFrame: CGRect = .zero
-    @State private var breathe = false
+    @State private var stageFrame: CGRect = .zero
     @State private var jump: CGFloat = 0
     @State private var shake: Double = 0
     @State private var chewing = false
+    @State private var biteOpen = false
+    @State private var playing = false
+    @State private var targetingFood = false
+    @State private var activityTask: Task<Void, Never>?
+    @Environment(\.scenePhase) private var scenePhase
     @State private var bursts: [Burst] = []
     @State private var strokeDistance: CGFloat = 0
     @State private var showWardrobe = false
@@ -36,9 +40,27 @@ struct RoomScene: View {
 
     private var state: LabubuState { viewModel.state }
 
+    /// Das Baby bekommt ein wirklich kleineres Layout, damit auch Ziehen und VoiceOver passen.
+    /// Die Füße bleiben während des Wachstums an derselben Stelle auf dem Teppich.
+    private var labubuFrame: CGRect {
+        let size = CGSize(width: stageFrame.width * state.growthScale,
+                          height: stageFrame.height * state.growthScale)
+        return CGRect(x: stageFrame.midX - size.width / 2,
+                      y: stageFrame.maxY - size.height,
+                      width: size.width, height: size.height)
+    }
+
+    private func characterRect(in stageSize: CGSize) -> CGRect {
+        let size = CGSize(width: stageSize.width * state.growthScale,
+                          height: stageSize.height * state.growthScale)
+        return CGRect(x: (stageSize.width - size.width) / 2,
+                      y: stageSize.height - size.height,
+                      width: size.width, height: size.height)
+    }
+
     /// Mund-Position im Raum – Ziel für das Essen.
     private var mouthPoint: CGPoint {
-        CGPoint(x: labubuFrame.midX, y: labubuFrame.minY + labubuFrame.height * 0.6)
+        CGPoint(x: labubuFrame.midX, y: labubuFrame.minY + labubuFrame.height * 0.56)
     }
 
     var body: some View {
@@ -46,12 +68,16 @@ struct RoomScene: View {
             RoomBackground(night: state.isSleeping, floorY: labubuFrame == .zero ? nil : labubuFrame.maxY)
 
             StageLayout { size in
+                let character = characterRect(in: size)
                 ZStack {
                     ZStack {
-                        LabubuArt(mood: state.mood, chewing: chewing)
+                        LabubuArt(mood: chewing || playing ? .happy : state.mood, chewing: chewing && biteOpen)
                         OutfitLayer(items: wornItems)
+                        BabyDiaper(growthProgress: state.growthProgress)
                     }
-                        .scaleEffect(x: breathe ? 1.02 : 0.99, y: breathe ? 0.98 : 1.02, anchor: .bottom)
+                        .frame(width: character.width, height: character.height)
+                        .scaleEffect(x: biteOpen ? 1.018 : 1, y: biteOpen ? 0.985 : 1, anchor: .bottom)
+                        .modifier(BreathingMotion(sleeping: state.isSleeping))
                         .rotationEffect(.degrees(shake), anchor: .bottom)
                         .offset(y: jump)
                         .brightness(state.isSleeping ? -0.2 : 0)
@@ -59,30 +85,59 @@ struct RoomScene: View {
                         .contentShape(Rectangle())
                         .onTapGesture(perform: tickle)
                         .gesture(strokeGesture)
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel("Labubu")
+                        .accessibilityIdentifier("labubu")
+                        .accessibilityValue(chewing ? "Isst" : (playing ? "Spielt" : state.mood.rawValue))
+                        .accessibilityHint(state.isBaby ? "Baby-Labubu wächst beim Füttern und Schlafen" : "Labubu")
+                        .position(x: character.midX, y: character.midY)
+                        .animation(.easeInOut(duration: 0.8), value: state.growthScale)
+
+                    if targetingFood {
+                        Ellipse()
+                            .stroke(.white, style: StrokeStyle(lineWidth: 5, dash: [7, 5]))
+                            .background(Ellipse().fill(.pink.opacity(0.25)))
+                            .frame(width: max(80, character.width * 0.36), height: max(64, character.height * 0.18))
+                            .position(x: character.midX, y: character.minY + character.height * 0.56)
+                            .allowsHitTesting(false)
+                    }
 
                     if state.isSleeping {
-                        SleepZs().offset(x: size.width * 0.3, y: -size.height * 0.35)
+                        SleepZs().position(x: character.maxX - character.width * 0.08,
+                                           y: character.minY + character.height * 0.2)
                     } else if let wish = state.wish, !chewing {
                         ThoughtBubble(emoji: emoji(for: wish))
-                            .offset(x: size.width * 0.62, y: -size.height * 0.42)
+                            .position(x: character.maxX + character.width * 0.1,
+                                      y: character.minY + character.height * 0.35)
                             .transition(.scale.combined(with: .opacity))
                     }
-                    ForEach(bursts) { burst in SparkleBurst(symbols: burst.symbols) }
+                    ForEach(bursts) { burst in
+                        SparkleBurst(symbols: burst.symbols).position(x: character.midX, y: character.midY)
+                    }
                 }
-                .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("room")) } action: { labubuFrame = $0 }
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("room")) } action: { stageFrame = $0 }
                 .animation(.spring(response: 0.4, dampingFraction: 0.7), value: state.wish)
             } bar: {
-                HStack(alignment: .center, spacing: 20) {
-                    FoodPlate(target: mouthPoint, enabled: !state.isSleeping, onArrive: feed)
+                HStack(alignment: .center, spacing: 10) {
+                    FoodPlate(target: mouthPoint,
+                              hitRadius: CGSize(width: max(40, labubuFrame.width * 0.18), height: max(32, labubuFrame.height * 0.09)),
+                              enabled: labubuFrame != .zero && !state.isSleeping && !chewing && !playing,
+                              onTargetingChanged: { targetingFood = $0 }, onArrive: feed)
                     Spacer()
+                    RoundButton(emoji: "🏀", dimmed: state.isSleeping || playing || chewing, action: playTogether)
+                        .disabled(state.isSleeping || playing || chewing)
+                        .accessibilityLabel("Mit Labubu hüpfen und tanzen")
+                        .accessibilityIdentifier("playButton")
                     RoundButton(emoji: "👗", dimmed: state.isSleeping) {
                         sound.play(.swish)
                         withAnimation(.spring(response: 0.45, dampingFraction: 0.8)) { showWardrobe = true }
                     }
-                    .disabled(state.isSleeping)
+                    .disabled(state.isSleeping || playing || chewing)
                     LampButton(lightOn: !state.isSleeping, action: toggleLight)
+                        .accessibilityLabel(state.isSleeping ? "Labubu aufwecken" : "Labubu schlafen legen")
+                        .accessibilityIdentifier("sleepButton")
                 }
-                .padding(.horizontal, 40)
+                .padding(.horizontal, 20)
                 .opacity(showWardrobe ? 0 : 1)
             }
 
@@ -119,14 +174,16 @@ struct RoomScene: View {
             if new > old { celebrateStars(new - old) }
         }
         .onChange(of: state.isSleeping) { _, sleeping in
-            if sleeping { withAnimation { showWardrobe = false } }
+            if sleeping {
+                stopActivity()
+                withAnimation { showWardrobe = false }
+            }
         }
-        .onAppear {
-            withAnimation(.easeInOut(duration: 1.4).repeatForever(autoreverses: true)) { breathe = true }
-        }
-        .task(id: state.isSleeping) {
+        .onChange(of: scenePhase) { _, phase in if phase != .active { stopActivity() } }
+        .onDisappear(perform: stopActivity)
+        .task(id: state.isSleeping && scenePhase == .active) {
             // Leises Schnarchen, solange Labubu schläft.
-            while state.isSleeping && !Task.isCancelled {
+            while state.isSleeping && scenePhase == .active && !Task.isCancelled {
                 sound.play(.snore, pitchVariation: 0.05)
                 try? await Task.sleep(for: .seconds(3.5))
             }
@@ -144,24 +201,71 @@ struct RoomScene: View {
     // MARK: Aktionen
 
     private func feed() -> Bool {
+        guard !chewing, !playing else { return false }
         guard viewModel.feed() else {
             sound.play(.nope)
             shakeHead()
             return false
         }
-        sound.play(.chomp, pitchVariation: 0.1)
-        withAnimation(.spring(response: 0.2, dampingFraction: 0.4)) { chewing = true; jump = -18 }
-        Task {
-            try? await Task.sleep(for: .milliseconds(200))
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) { jump = 0 }
-            try? await Task.sleep(for: .milliseconds(600))
-            withAnimation { chewing = false }
+        chewing = true
+        sound.play(.hap)
+        activityTask = Task { @MainActor in
+            defer { biteOpen = false; chewing = false; jump = 0 }
+            do {
+                for _ in 0..<5 {
+                    guard !Task.isCancelled else { return }
+                    withAnimation(.easeInOut(duration: 0.08)) { biteOpen = true; jump = -8 }
+                    try await Task.sleep(for: .milliseconds(120))
+                    withAnimation(.easeInOut(duration: 0.08)) { biteOpen = false; jump = 0 }
+                    try await Task.sleep(for: .milliseconds(120))
+                }
+                addBurst(["😋", "💖"])
+            } catch { }
         }
-        addBurst(["😋", "✨", "💖"])
         return true
     }
 
+    private func playTogether() {
+        guard !playing, !chewing else { return }
+        guard viewModel.play() else {
+            addBurst(["🌙", "💤"])
+            sound.play(.nope)
+            return
+        }
+        playing = true
+        activityTask = Task { @MainActor in
+            defer { playing = false; jump = 0; shake = 0 }
+            do {
+                for turn in 0..<4 {
+                    guard !Task.isCancelled else { return }
+                    sound.play(.giggle, pitchVariation: 0.12)
+                    withAnimation(.spring(response: 0.25, dampingFraction: 0.55)) {
+                        jump = -55
+                        shake = turn.isMultiple(of: 2) ? -9 : 9
+                    }
+                    try await Task.sleep(for: .milliseconds(250))
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) { jump = 0; shake = 0 }
+                    try await Task.sleep(for: .milliseconds(300))
+                }
+                addBurst(["🎵", "💕", "✨"])
+            } catch { }
+        }
+    }
+
+    private func stopActivity() {
+        activityTask?.cancel()
+        activityTask = nil
+        chewing = false
+        playing = false
+        biteOpen = false
+        targetingFood = false
+        jump = 0
+        shake = 0
+        sound.stopEffects()
+    }
+
     private func tickle() {
+        guard !playing, !chewing else { return }
         guard !state.isSleeping else {
             // Schläft – nur ein kleines Wackeln, kein Aufwachen.
             shakeHead(small: true)
@@ -181,12 +285,13 @@ struct RoomScene: View {
     private var strokeGesture: some Gesture {
         DragGesture(minimumDistance: 10)
             .onChanged { value in
-                guard !state.isSleeping else { return }
+                guard !state.isSleeping, !playing, !chewing else { return }
                 let distance = hypot(value.translation.width, value.translation.height)
                 if distance - strokeDistance > 150 {
                     strokeDistance = distance
                     viewModel.pet()
                     sound.play(.giggle, pitchVariation: 0.2)
+                    hop()
                     addBurst(["💕"])
                 }
             }

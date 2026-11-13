@@ -81,6 +81,10 @@ struct NeedBubble: View {
             .overlay(Text(emoji).font(.system(size: 46)))
             .scaleEffect(pulse)
             .animation(.easeInOut(duration: 0.6), value: level)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(emoji)
+            .accessibilityValue("\(Int(level * 100))")
+            .accessibilityIdentifier("need-\(emoji)")
         }
     }
 }
@@ -168,11 +172,13 @@ struct LampButton: View {
     }
 }
 
-/// Teller mit drei Essen. Antippen oder zu Labubu ziehen füttert.
+/// Teller mit drei Essen. Futter muss in den Mund gezogen werden.
 struct FoodPlate: View {
     /// Mitte von Labubus Mund im Koordinatenraum „room“.
     let target: CGPoint
+    let hitRadius: CGSize
     let enabled: Bool
+    var onTargetingChanged: (Bool) -> Void = { _ in }
     /// Wird aufgerufen, wenn das Essen bei Labubu ankommt. `true` = gegessen, `false` = abgelehnt.
     let onArrive: () -> Bool
 
@@ -188,7 +194,8 @@ struct FoodPlate: View {
     var body: some View {
         HStack(spacing: 10) {
             ForEach(slots) { slot in
-                FoodItem(emoji: slot.emoji, target: target, onArrive: onArrive) {
+                FoodItem(emoji: slot.emoji, target: target, hitRadius: hitRadius,
+                         onTargetingChanged: onTargetingChanged, onArrive: onArrive) {
                     replace(slot.id)
                 }
             }
@@ -215,40 +222,60 @@ struct FoodPlate: View {
 private struct FoodItem: View {
     let emoji: String
     let target: CGPoint
+    let hitRadius: CGSize
+    let onTargetingChanged: (Bool) -> Void
     let onArrive: () -> Bool
     let onEaten: () -> Void
 
     @State private var home: CGRect = .zero
     @State private var offset: CGSize = .zero
-    @State private var dragging = false
+    @GestureState private var dragging = false
     @State private var eaten = false
     @State private var busy = false
+    @State private var deliveryTask: Task<Void, Never>?
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
-        Text(emoji)
-            .font(.system(size: 62))
-            .frame(width: 92, height: 92)
-            .contentShape(Rectangle())
-            .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("room")) } action: { home = $0 }
-            .scaleEffect(eaten ? 0.1 : (dragging ? 1.3 : 1))
-            .opacity(eaten ? 0 : 1)
-            .offset(offset)
-            .zIndex(dragging || busy ? 10 : 0)
-            .onTapGesture { deliver() }
-            .gesture(
-                DragGesture(minimumDistance: 6, coordinateSpace: .named("room"))
-                    .onChanged { value in
-                        guard !busy else { return }
-                        dragging = true
-                        offset = value.translation
-                    }
-                    .onEnded { value in
-                        dragging = false
-                        let close = hypot(value.location.x - target.x, value.location.y - target.y) < 170
-                        if close { deliver() } else { springHome() }
-                    }
-            )
-            .transition(.scale.combined(with: .opacity))
+        ZStack {
+            Text(emoji)
+                .font(.system(size: 62))
+                .frame(width: 92, height: 92)
+                .contentShape(Rectangle())
+                .scaleEffect(eaten ? 0.1 : (dragging ? 1.3 : 1))
+                .opacity(eaten ? 0 : 1)
+                .offset(offset)
+                .zIndex(dragging || busy ? 10 : 0)
+                .accessibilityLabel("\(emoji) zum Mund ziehen")
+                .accessibilityIdentifier("food-\(emoji)")
+                .accessibilityAction(named: "Füttern") { deliver() }
+                .gesture(
+                    DragGesture(minimumDistance: 6, coordinateSpace: .named("room"))
+                        .updating($dragging) { _, value, _ in value = true }
+                        .onChanged { value in
+                            guard !busy else { return }
+                            onTargetingChanged(true)
+                            offset = value.translation
+                        }
+                        .onEnded { value in
+                            onTargetingChanged(false)
+                            let close = FeedingTarget.contains(value.location, mouth: target, radius: hitRadius)
+                            if close { deliver() } else { springHome() }
+                        }
+                )
+                .transition(.scale.combined(with: .opacity))
+        }
+        .frame(width: 92, height: 92)
+        .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("room")) } action: { home = $0 }
+        .onChange(of: dragging) { _, active in
+            if !active {
+                onTargetingChanged(false)
+                if !busy { springHome() }
+            }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active { deliveryTask?.cancel(); springHome(); onTargetingChanged(false) }
+        }
+        .onDisappear { deliveryTask?.cancel(); onTargetingChanged(false) }
     }
 
     private func deliver() {
@@ -257,11 +284,11 @@ private struct FoodItem: View {
         withAnimation(.easeIn(duration: 0.3)) {
             offset = CGSize(width: target.x - home.midX, height: target.y - home.midY)
         }
-        Task {
-            try? await Task.sleep(for: .milliseconds(300))
+        deliveryTask = Task { @MainActor in
+            do { try await Task.sleep(for: .milliseconds(300)) } catch { return }
             if onArrive() {
                 withAnimation(.easeIn(duration: 0.25)) { eaten = true }
-                try? await Task.sleep(for: .milliseconds(450))
+                do { try await Task.sleep(for: .milliseconds(450)) } catch { return }
                 onEaten()
             } else {
                 springHome()

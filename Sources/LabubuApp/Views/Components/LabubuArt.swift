@@ -7,7 +7,7 @@ struct LabubuArt: View {
     var chewing = false
 
     var body: some View {
-        if let image = Artwork.labubu(mood: chewing ? .happy : mood) {
+        if let image = Artwork.labubu(mood: chewing ? .hungry : mood) {
             Image(uiImage: image).resizable().scaledToFit()
         } else {
             DrawnLabubu(mood: mood, chewing: chewing)

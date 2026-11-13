@@ -21,6 +21,10 @@ struct StarCounter: View {
         .scaleEffect(pop ? 1.25 : 1)
         .animation(.spring(response: 0.3, dampingFraction: 0.5), value: pop)
         .animation(.default, value: stars)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Sterne")
+        .accessibilityValue("\(stars)")
+        .accessibilityIdentifier("starCounter")
     }
 }
 
@@ -75,15 +79,6 @@ struct WardrobePanel: View {
     let onUse: (OutfitItem) -> LabubuViewModel.WardrobeResult
     let onClose: () -> Void
 
-    /// Zwei kompakte Reihen, damit Labubu darüber sichtbar bleibt und man sieht, was es trägt.
-    private static let columns = 7
-
-    private var rows: [[OutfitItem]] {
-        stride(from: 0, to: OutfitItem.catalog.count, by: Self.columns).map {
-            Array(OutfitItem.catalog[$0..<min($0 + Self.columns, OutfitItem.catalog.count)])
-        }
-    }
-
     var body: some View {
         HStack(spacing: 12) {
             Button(action: onClose) {
@@ -93,22 +88,22 @@ struct WardrobePanel: View {
                     .background(RoundedRectangle(cornerRadius: 22, style: .continuous).fill(.white))
             }
             .buttonStyle(.plain)
-            VStack(alignment: .leading, spacing: 8) {
-                ForEach(Array(rows.enumerated()), id: \.offset) { _, row in
-                    HStack(spacing: 8) {
-                        ForEach(row) { item in
-                            WardrobeCell(
-                                item: item,
-                                owned: state.owns(item),
-                                worn: state.isWearing(item),
-                                affordable: state.stars >= item.price,
-                                labubuFrame: labubuFrame,
-                                onUse: { onUse(item) }
-                            )
-                        }
+            ScrollView(.horizontal) {
+                LazyHGrid(rows: [GridItem(.fixed(WardrobeCell.size)), GridItem(.fixed(WardrobeCell.size))], spacing: 12) {
+                    ForEach(OutfitItem.catalog) { item in
+                        WardrobeCell(
+                            item: item,
+                            owned: state.owns(item),
+                            worn: state.isWearing(item),
+                            affordable: state.stars >= item.price,
+                            labubuFrame: labubuFrame,
+                            onUse: { onUse(item) }
+                        )
                     }
-                }
+                }.padding(8)
             }
+            .scrollClipDisabled()
+            .frame(height: 2 * WardrobeCell.size + 24)
         }
         .padding(16)
         .background(
@@ -167,8 +162,16 @@ private struct WardrobeCell: View {
                         .stroke(worn ? Color.pink : (canBuy ? Color.yellow : .clear), lineWidth: 5)
                 )
             VStack(spacing: 2) {
-                Text(item.emoji)
-                    .font(.system(size: owned ? 50 : 40))
+                Group {
+                    if let image = OutfitArtwork.image(for: item) {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: owned ? 56 : 46, height: owned ? 56 : 46)
+                    } else {
+                        Text(item.emoji).font(.system(size: owned ? 50 : 40))
+                    }
+                }
                     .opacity(owned ? 1 : 0.45)
                 if !owned {
                     // Preis als Sterne zum Zählen statt als Zahl.

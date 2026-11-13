@@ -10,13 +10,24 @@
 		28F63ACCCEA2DA98F01CCAFA /* LabubuApp in Frameworks */ = {isa = PBXBuildFile; productRef = AE39B8FBDA18167C04400DD5 /* LabubuApp */; };
 		2BA8990BAA6C3FB1448D9380 /* LabubuApp in Frameworks */ = {isa = PBXBuildFile; productRef = 97355D889709586E6D5DAFE9 /* LabubuApp */; };
 		35D1A6F08AF12652FFC5AC96 /* StarsAndWardrobeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615E3F880A6E9FF9C06680A3 /* StarsAndWardrobeTests.swift */; };
+		47EC7647BFCC30A28CF30AFA /* InteractionFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE18DA876D17366E0B9108BE /* InteractionFlowTests.swift */; };
 		7575B7619268072B68EF0A2A /* LabubuStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FBA6BBA8FCD4F55AEEE2DE /* LabubuStateTests.swift */; };
+		79B35FCB97131075BBDA1476 /* InteractionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4EEEF3115D44C5ECBCF380 /* InteractionTests.swift */; };
+		91AD117364735455A82E017D /* GrowthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440888DB7D290569A76F8554 /* GrowthTests.swift */; };
 		97EC0832237AF0CDC6FB4194 /* NeedsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E1C8CE05910997901E849D /* NeedsTests.swift */; };
 		9A348EC7A427567CD6575D45 /* LabubuGameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811FDA748C3B7F71166A61B /* LabubuGameApp.swift */; };
+		A904549A8B0C8A12D607AA7C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B45C259BF03B776E1E5C708 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		4B94F4E41109CDE1B6C89FD3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 23A8772AA828CC3108AB1ACF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00D2558F5213F550E63ADFD5;
+			remoteInfo = LabubuGame;
+		};
+		505203F14F717E713A213213 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 23A8772AA828CC3108AB1ACF /* Project object */;
 			proxyType = 1;
@@ -28,10 +39,15 @@
 /* Begin PBXFileReference section */
 		279CD770ED2E002E4BA02A03 /* LabubuGameTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LabubuGameTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		38EF55D81F05FAE7599DF179 /* LabubuGame.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LabubuGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		440888DB7D290569A76F8554 /* GrowthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowthTests.swift; sourceTree = "<group>"; };
+		56C98829542C01B16E66EBB4 /* LabubuGameUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LabubuGameUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		615E3F880A6E9FF9C06680A3 /* StarsAndWardrobeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarsAndWardrobeTests.swift; sourceTree = "<group>"; };
 		62FBA6BBA8FCD4F55AEEE2DE /* LabubuStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabubuStateTests.swift; sourceTree = "<group>"; };
+		8B45C259BF03B776E1E5C708 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A8E1C8CE05910997901E849D /* NeedsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeedsTests.swift; sourceTree = "<group>"; };
+		AE18DA876D17366E0B9108BE /* InteractionFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionFlowTests.swift; sourceTree = "<group>"; };
 		B811FDA748C3B7F71166A61B /* LabubuGameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabubuGameApp.swift; sourceTree = "<group>"; };
+		BD4EEEF3115D44C5ECBCF380 /* InteractionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionTests.swift; sourceTree = "<group>"; };
 		C0A9D0666D54286C5F12BA8C /* labubu-app-overview-812111 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "labubu-app-overview-812111"; path = .; sourceTree = SOURCE_ROOT; };
 		C119E63CE6C9F0361F6C881B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -67,6 +83,7 @@
 		68D78D53FF1EE20E51988C98 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				8B45C259BF03B776E1E5C708 /* Assets.xcassets */,
 				C119E63CE6C9F0361F6C881B /* Info.plist */,
 				B811FDA748C3B7F71166A61B /* LabubuGameApp.swift */,
 			);
@@ -78,6 +95,7 @@
 			children = (
 				38EF55D81F05FAE7599DF179 /* LabubuGame.app */,
 				279CD770ED2E002E4BA02A03 /* LabubuGameTests.xctest */,
+				56C98829542C01B16E66EBB4 /* LabubuGameUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,6 +105,7 @@
 			children = (
 				68D78D53FF1EE20E51988C98 /* App */,
 				E8A19E3A2C87471250B6AB4F /* LabubuAppTests */,
+				F56AFE087C2925C433957CD6 /* LabubuUITests */,
 				08F87F2C379A7C4571A0D31A /* Packages */,
 				74A8A6CC1C8F50148B617556 /* Products */,
 			);
@@ -95,12 +114,23 @@
 		E8A19E3A2C87471250B6AB4F /* LabubuAppTests */ = {
 			isa = PBXGroup;
 			children = (
+				440888DB7D290569A76F8554 /* GrowthTests.swift */,
+				BD4EEEF3115D44C5ECBCF380 /* InteractionTests.swift */,
 				62FBA6BBA8FCD4F55AEEE2DE /* LabubuStateTests.swift */,
 				A8E1C8CE05910997901E849D /* NeedsTests.swift */,
 				615E3F880A6E9FF9C06680A3 /* StarsAndWardrobeTests.swift */,
 			);
 			name = LabubuAppTests;
 			path = Tests/LabubuAppTests;
+			sourceTree = "<group>";
+		};
+		F56AFE087C2925C433957CD6 /* LabubuUITests */ = {
+			isa = PBXGroup;
+			children = (
+				AE18DA876D17366E0B9108BE /* InteractionFlowTests.swift */,
+			);
+			name = LabubuUITests;
+			path = Tests/LabubuUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -111,6 +141,7 @@
 			buildConfigurationList = 55F24C187041BD1C83A0CE84 /* Build configuration list for PBXNativeTarget "LabubuGame" */;
 			buildPhases = (
 				F30637808C6DBB468C48BD74 /* Sources */,
+				833A0DE09C5AB65E8BDE7234 /* Resources */,
 				D7A55FDFF00EB1D73A97A2F2 /* Frameworks */,
 			);
 			buildRules = (
@@ -124,6 +155,24 @@
 			productName = LabubuGame;
 			productReference = 38EF55D81F05FAE7599DF179 /* LabubuGame.app */;
 			productType = "com.apple.product-type.application";
+		};
+		0A894C3FAA5465429D18C2CA /* LabubuGameUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7D87BF2DDEFF2C66684C1A22 /* Build configuration list for PBXNativeTarget "LabubuGameUITests" */;
+			buildPhases = (
+				B81128D0D06AEC887A4DBF78 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4A600BC12AE4B55D80DB8AAD /* PBXTargetDependency */,
+			);
+			name = LabubuGameUITests;
+			packageProductDependencies = (
+			);
+			productName = LabubuGameUITests;
+			productReference = 56C98829542C01B16E66EBB4 /* LabubuGameUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 		3EB0B2D981492CB7DEE79B0F /* LabubuGameTests */ = {
 			isa = PBXNativeTarget;
@@ -154,6 +203,9 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					0A894C3FAA5465429D18C2CA = {
+						TestTargetID = 00D2558F5213F550E63ADFD5;
+					};
 				};
 			};
 			buildConfigurationList = 5E217DFAE7F828E0CA1F8AD9 /* Build configuration list for PBXProject "Labubu" */;
@@ -175,15 +227,37 @@
 			targets = (
 				00D2558F5213F550E63ADFD5 /* LabubuGame */,
 				3EB0B2D981492CB7DEE79B0F /* LabubuGameTests */,
+				0A894C3FAA5465429D18C2CA /* LabubuGameUITests */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		833A0DE09C5AB65E8BDE7234 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A904549A8B0C8A12D607AA7C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		B81128D0D06AEC887A4DBF78 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				47EC7647BFCC30A28CF30AFA /* InteractionFlowTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E270BF5E812FB83BABBA53C5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91AD117364735455A82E017D /* GrowthTests.swift in Sources */,
+				79B35FCB97131075BBDA1476 /* InteractionTests.swift in Sources */,
 				7575B7619268072B68EF0A2A /* LabubuStateTests.swift in Sources */,
 				97EC0832237AF0CDC6FB4194 /* NeedsTests.swift in Sources */,
 				35D1A6F08AF12652FFC5AC96 /* StarsAndWardrobeTests.swift in Sources */,
@@ -205,6 +279,11 @@
 			isa = PBXTargetDependency;
 			target = 00D2558F5213F550E63ADFD5 /* LabubuGame */;
 			targetProxy = 4B94F4E41109CDE1B6C89FD3 /* PBXContainerItemProxy */;
+		};
+		4A600BC12AE4B55D80DB8AAD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00D2558F5213F550E63ADFD5 /* LabubuGame */;
+			targetProxy = 505203F14F717E713A213213 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -320,6 +399,40 @@
 			};
 			name = Release;
 		};
+		A6BD0DF813B411368384996C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.labubu.LabubuGameUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				TEST_TARGET_NAME = LabubuGame;
+			};
+			name = Release;
+		};
+		E19FB75ADCC7151AB1593814 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.labubu.LabubuGameUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				TEST_TARGET_NAME = LabubuGame;
+			};
+			name = Debug;
+		};
 		E2DF390807363BC7A2EC8E4A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -426,6 +539,15 @@
 			buildConfigurations = (
 				E2DF390807363BC7A2EC8E4A /* Debug */,
 				0368F7348D7090596FB0346F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7D87BF2DDEFF2C66684C1A22 /* Build configuration list for PBXNativeTarget "LabubuGameUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E19FB75ADCC7151AB1593814 /* Debug */,
+				A6BD0DF813B411368384996C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

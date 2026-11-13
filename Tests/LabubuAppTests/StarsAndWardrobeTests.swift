@@ -131,6 +131,20 @@ struct StarsAndWardrobeTests {
         #expect(state.worn.isEmpty)
     }
 
+    @Test func vestAndNeckwearPersistTogether() throws {
+        var state = hatched()
+        let boughtVest = state.buy(item("mintVest"))
+        let boughtTie = state.buy(item("bowtie"))
+        #expect(boughtVest)
+        #expect(boughtTie)
+        state.wear(item("mintVest"))
+        state.wear(item("bowtie"))
+        let restored = try JSONDecoder().decode(LabubuState.self, from: JSONEncoder().encode(state))
+        #expect(restored.wornItem(in: .body) == item("mintVest"))
+        #expect(restored.wornItem(in: .neck) == item("bowtie"))
+        #expect(restored.stars == 0)
+    }
+
     @Test func catalogIsConsistent() {
         let ids = OutfitItem.catalog.map(\.id)
         #expect(Set(ids).count == ids.count, "IDs eindeutig")

@@ -110,5 +110,9 @@ struct HeartsProgress: View {
         .padding(.horizontal, 28)
         .padding(.vertical, 18)
         .background(.ultraThinMaterial, in: Capsule())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Ei-Wärme")
+        .accessibilityValue("\(filled) von \(total)")
+        .accessibilityIdentifier("heartsProgress")
     }
 }

@@ -11,6 +11,12 @@ enum HatchStage: String, Codable {
 
 /// Gesamter Spielstand. Wird als JSON gespeichert, daher nur einfache, Codable-Felder.
 struct LabubuState: Codable, Equatable {
+    private enum CodingKeys: String, CodingKey {
+        case eggTaps, hatchedAt, chosenEgg, growthProgress
+        case needs, needsUpdatedAt, sleepingSince
+        case stars, ownedItems, worn, petsTowardStar, sleepRewardPending
+    }
+
     /// So oft muss das Kind tippen, bis Labubu schlüpft. Jeder Tipp zählt – auch ganz schnelles Tippen.
     static let tapsToHatch = 18
     /// Anzahl der Herzen in der Fortschrittsanzeige.
@@ -20,6 +26,16 @@ struct LabubuState: Codable, Equatable {
 
     private(set) var eggTaps: Int = 0
     private(set) var hatchedAt: Date?
+    /// nil = vor dem ersten Wärmen eines von drei Eiern auswählen.
+    private(set) var chosenEgg: EggVariant?
+    /// Dauerhafter Pflegefortschritt: 0 = kleines Baby, 1 = ausgewachsen.
+    private(set) var growthProgress: Double = 0
+
+    var growthScale: Double { 0.6 + growthProgress * 0.4 }
+    var isBaby: Bool { growthProgress < 0.4 }
+
+    static let growthPerMeal = 0.05
+    static let growthPerRecoveredEnergy = 0.15
 
     // Pflege (ab dem Schlüpfen)
     private(set) var needs = Needs.newborn
@@ -50,6 +66,15 @@ struct LabubuState: Codable, Equatable {
 
     init() {}
 
+    /// Clara darf ein neues Ei starten, ohne ihre gesammelten Sachen zu verlieren.
+    mutating func startNewEgg() {
+        let savedStars = stars, savedItems = ownedItems, savedOutfit = worn
+        self = LabubuState()
+        stars = savedStars
+        ownedItems = savedItems
+        worn = savedOutfit
+    }
+
     var stage: HatchStage {
         if hatchedAt != nil { return .hatched }
         return eggTaps >= Self.tapsToHatch ? .hatching : .egg
@@ -72,7 +97,14 @@ struct LabubuState: Codable, Equatable {
 
     mutating func tapEgg() {
         guard stage == .egg else { return }
+        // Direkte Modell-Aufrufer und ältere Spielstände bleiben kompatibel.
+        if chosenEgg == nil { chosenEgg = .classic }
         eggTaps += 1
+    }
+
+    mutating func selectEgg(_ variant: EggVariant) {
+        guard stage == .egg, eggTaps == 0 else { return }
+        chosenEgg = variant
     }
 
     mutating func finishHatching(at date: Date = Date()) {
@@ -111,7 +143,12 @@ struct LabubuState: Codable, Equatable {
     mutating func advanceNeeds(to now: Date) {
         guard stage == .hatched else { return }
         let last = needsUpdatedAt ?? now
+        let energyBefore = needs.energy
         needs.advance(by: now.timeIntervalSince(last), sleeping: isSleeping)
+        if isSleeping {
+            // Nur wirklich zurückgewonnene Energie zählt: Schalter-Tippen bringt nichts.
+            grow(by: max(0, needs.energy - energyBefore) * Self.growthPerRecoveredEnergy)
+        }
         needsUpdatedAt = max(last, now)
     }
 
@@ -123,7 +160,12 @@ struct LabubuState: Codable, Equatable {
         needs.hunger += Self.mealSize
         needs.clamp()
         stars += Self.starsPerMeal
+        grow(by: Self.growthPerMeal)
         return true
+    }
+
+    private mutating func grow(by amount: Double) {
+        growthProgress = min(1, max(0, growthProgress + amount))
     }
 
     /// Sterne gibt es nur, solange Labubu noch nicht ganz fröhlich ist – Dauer-Tippen lohnt sich also nicht.
@@ -139,6 +181,18 @@ struct LabubuState: Codable, Equatable {
             petsTowardStar = 0
             stars += 1
         }
+    }
+
+    /// Eine kurze aktive Spielrunde macht fröhlich, hungriger und spürbar müde.
+    @discardableResult
+    mutating func play(at now: Date = Date()) -> Bool {
+        advanceNeeds(to: now)
+        guard stage == .hatched, !isSleeping, needs.energy >= 0.2 else { return false }
+        needs.fun += 0.22
+        needs.energy -= 0.18
+        needs.hunger -= 0.06
+        needs.clamp()
+        return true
     }
 
     mutating func sleep(at now: Date = Date()) {
@@ -211,6 +265,9 @@ extension LabubuState {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         eggTaps = try c.decode(Int.self, forKey: .eggTaps)
         hatchedAt = try c.decodeIfPresent(Date.self, forKey: .hatchedAt)
+        // Neue Auswahlen speichern nil ausdrücklich als null; alte Spielstände hatten kein Feld.
+        chosenEgg = c.contains(.chosenEgg) ? try c.decodeIfPresent(EggVariant.self, forKey: .chosenEgg) : .classic
+        growthProgress = min(1, max(0, try c.decodeIfPresent(Double.self, forKey: .growthProgress) ?? 0))
         needs = try c.decodeIfPresent(Needs.self, forKey: .needs) ?? .newborn
         needsUpdatedAt = try c.decodeIfPresent(Date.self, forKey: .needsUpdatedAt) ?? hatchedAt
         sleepingSince = try c.decodeIfPresent(Date.self, forKey: .sleepingSince)
@@ -219,5 +276,21 @@ extension LabubuState {
         worn = try c.decodeIfPresent([String: String].self, forKey: .worn) ?? [:]
         petsTowardStar = try c.decodeIfPresent(Int.self, forKey: .petsTowardStar) ?? 0
         sleepRewardPending = try c.decodeIfPresent(Bool.self, forKey: .sleepRewardPending) ?? false
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encode(eggTaps, forKey: .eggTaps)
+        try c.encodeIfPresent(hatchedAt, forKey: .hatchedAt)
+        try c.encode(chosenEgg, forKey: .chosenEgg)
+        try c.encode(growthProgress, forKey: .growthProgress)
+        try c.encode(needs, forKey: .needs)
+        try c.encodeIfPresent(needsUpdatedAt, forKey: .needsUpdatedAt)
+        try c.encodeIfPresent(sleepingSince, forKey: .sleepingSince)
+        try c.encode(stars, forKey: .stars)
+        try c.encode(ownedItems, forKey: .ownedItems)
+        try c.encode(worn, forKey: .worn)
+        try c.encode(petsTowardStar, forKey: .petsTowardStar)
+        try c.encode(sleepRewardPending, forKey: .sleepRewardPending)
     }
 }

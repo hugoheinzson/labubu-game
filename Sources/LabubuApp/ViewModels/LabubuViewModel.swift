@@ -6,6 +6,7 @@ final class LabubuViewModel: ObservableObject {
     @Published private(set) var state: LabubuState {
         didSet { store.save(state) }
     }
+    @Published private(set) var eggSessionID = UUID()
 
     private let store: GameStore
     private var ticker: AnyCancellable?
@@ -31,6 +32,10 @@ final class LabubuViewModel: ObservableObject {
         state.tapEgg()
     }
 
+    func selectEgg(_ variant: EggVariant) {
+        state.selectEgg(variant)
+    }
+
     func finishHatching() {
         state.finishHatching()
     }
@@ -43,6 +48,9 @@ final class LabubuViewModel: ObservableObject {
     func pet() {
         state.pet()
     }
+
+    @discardableResult
+    func play() -> Bool { state.play() }
 
     func toggleSleep() {
         if state.isSleeping {
@@ -71,7 +79,13 @@ final class LabubuViewModel: ObservableObject {
     // MARK: Eltern-Bereich
 
     func resetGame() {
+        eggSessionID = UUID()
         state = LabubuState()
+    }
+
+    func startNewEgg() {
+        eggSessionID = UUID()
+        state.startNewEgg()
     }
 
     func drainNeedsForTesting() {

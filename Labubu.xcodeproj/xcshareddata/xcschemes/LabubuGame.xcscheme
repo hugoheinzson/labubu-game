@@ -50,6 +50,17 @@
                ReferencedContainer = "container:Labubu.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0A894C3FAA5465429D18C2CA"
+               BuildableName = "LabubuGameUITests.xctest"
+               BlueprintName = "LabubuGameUITests"
+               ReferencedContainer = "container:Labubu.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <CommandLineArguments>
       </CommandLineArguments>

@@ -51,17 +51,20 @@ Tests laufen in Xcode mit ⌘U.
 
 ## Eltern-Bereich
 
-Oben rechts in der Ecke **3 Sekunden gedrückt halten** öffnet den Eltern-Bereich:
+**Für Clara:** Der 🥚-Knopf mit dem Neustartpfeil oben rechts neben dem Lautsprecher startet sofort ein neues Ei. Sterne, gekaufte Kleidung und das Outfit bleiben erhalten. Das geht auch während des Rollens oder Schlüpfens; das neue Ei liegt wieder im Nest. Der vollständige Reset im Eltern-Bereich löscht dagegen weiterhin alles.
+
+Oben rechts den **Lautsprecher 3 Sekunden gedrückt halten** öffnet den Eltern-Bereich. Kurzes Antippen schaltet Musik und Geräusche gemeinsam stumm bzw. wieder an. Der Zustand wird gespeichert; die getrennten Einstellungen bleiben erhalten.
 
 - **Bedürfnisse leeren (zum Testen):** macht Labubu sofort hungrig, müde und traurig, um die Pflege auszuprobieren.
 - **10 Sterne geben (zum Testen):** um den Kleiderschrank auszuprobieren.
+- **Musik / Geräusche ein- oder ausschalten:** getrennte, gespeicherte Einstellungen.
 - **Spiel zurücksetzen:** neues Ei, aller Fortschritt weg.
 
 ## So funktioniert die Pflege
 
 | Bedürfnis | Blase | Leer nach | So hilft man |
 |---|---|---|---|
-| Hunger | 🍓 | ~6 Stunden | Essen vom Teller antippen oder zu Labubu ziehen |
+| Hunger | 🍓 | ~6 Stunden | Essen vom Teller direkt in den Mund ziehen |
 | Spaß | 💖 | ~4 Stunden | Labubu antippen (kitzeln) oder drüberwischen (streicheln) |
 | Energie | 🌙 | ~10 Stunden | Licht aus 💡 – im Dunkeln schläft Labubu und ist nach ~30 Sekunden ausgeschlafen |
 
@@ -80,6 +83,23 @@ Im Kleiderschrank 👗 gibt es 14 Teile für Kopf, Augen, Hals und Hand. 🎀 un
 
 Die Zeit läuft auch weiter, wenn die App zu ist. Ist ein Bedürfnis fast leer, pulsiert seine Blase und Labubu zeigt es im Gesicht und in einer Denkblase. Leer hat keine Folgen außer einem traurigen Gesicht.
 
+## Ei rollen, Füttern und Spielen
+
+- **Auswahl und Baby:** Zu Beginn stehen drei Eier (Beige, Rosa, Mint) zur Auswahl. Clara wählt eines aus und legt es damit ins Nest. Das geschlüpfte Baby startet bei 60 % der vollen Größe und trägt eine weiße/mintfarbene Windel. Kleidung und Mund-Trefferzone passen sich an die tatsächliche Größe an.
+- **Wachstum:** Eine angenommene Mahlzeit bringt 5 Prozentpunkte Wachstum; wirklich zurückgewonnene Schlafenergie bringt anteilig bis zu 15 Prozentpunkte pro voller Energieladung. Das funktioniert auch nach einer Offline-Schlafphase. Wiederholtes Umschalten des Lichts ohne Erholung zählt nicht. Bei 30–40 % Wachstum verblasst die Windel; bei 100 % ist die volle Größe erreicht. Ein neues Ei setzt Wachstum und Auswahl zurück, die Sammlung bleibt erhalten.
+- **Ei:** Beim Öffnen wird die iPad-Haltung als Ausgangspunkt genommen. Bewegen/Kippen lässt das Ei rollen, ruhiges Halten bremst es in jeder Haltung ab. Die Spielfläche hat Ränder. Das Nest hält kleine Bewegungen aus; nach dem Herausrollen muss das Ei ins Nest zurückgezogen werden, bevor Antippen oder kurze Streichelbewegungen wieder wärmen. Das Nest wird dann mintfarben. Beim Schlüpfen stoppt der Sensor und das Ei sitzt mittig. Im Hintergrund ist der Sensor aus; im Simulator funktioniert Ziehen auch ohne Sensor.
+- **Füttern:** Futter zum Mund ziehen, der während des Ziehens markiert wird. Auf Kopf oder Bauch abgelegtes Essen springt zurück. Erfolgreiches Füttern zeigt fünf schnelle Kaubewegungen und einen selbst synthetisierten „Hap, hap, hap, hap, hap“-Laut. Währenddessen kann kein weiteres Essen angenommen werden. VoiceOver bietet alternativ die Aktion „Füttern“.
+- **Spielen:** 🏀 startet eine kurze Hüpf-/Tanzrunde. Sie steigert Spaß und verbraucht 18 Prozentpunkte Energie sowie etwas Sättigung. Nach ungefähr vier Runden ist Labubu müde; unter 20 % Energie zeigt es Schlafsymbole statt weiterzuspielen. Licht aus lässt es wie bisher schlafen und Energie tanken. Es gibt keine Strafe.
+- **Ton erzeugen:** `python3 tools/gen_hap.py Sources/LabubuApp/Resources/hap.wav` benötigt nur die Python-Standardbibliothek.
+
+Die Tests umfassen Rollgrenzen, Abbremsen, Nest-Drops, Mund-Trefferzonen und den Spielen-Schlafen-Kreislauf. `LabubuGameUITests` prüft zusätzlich die Touch-Gesten im Simulator; dieser UI-Test setzt dort den Spielstand zurück und überspringt sich auf echten Geräten.
+
+## Musik und passende Kleidung
+
+Eine eigene, 24 Sekunden lange Spieluhr-Schleife läuft leise im Hintergrund, im Schlaf langsamer und leiser. Beim Verlassen der App pausiert sie. Erzeugen: `python3 tools/gen_music.py Sources/LabubuApp/Resources/musicbox.wav` (nur Python-Standardbibliothek). Die vorhandenen Effekte bleiben erhalten, mit reduzierter Lautstärke.
+
+Zusätzlich zu den 14 ursprünglichen Teilen gibt es eine Fliege und zwei gezeichnete Westen (Mint/Rosa). Westen belegen einen eigenen Körper-Platz und lassen sich mit Hals-Accessoires kombinieren. Der Schal sitzt bei Verwendung unserer Labubu-Grafik am Hals. Der Kleiderschrank hat zwei seitlich scrollbar angeordnete Reihen.
+
 ## Grafiken
 
 Ohne Bilddateien zeigt die App gezeichnete Platzhalter, sie ist also schon voll spielbar. Wie die KI-Grafiken entstehen und welche Dateien erwartet werden, steht in [docs/GRAFIK.md](docs/GRAFIK.md).
@@ -92,6 +112,10 @@ Zielgruppe, Spielidee und Wochenplan bis Weihnachten: [docs/KONZEPT.md](docs/KON
 
 - ✅ Woche 1: kindgerechte Ei-Phase, Schlüpf-Animation, Töne, Spielstand speichern
 - ✅ Woche 2: Labubus Zimmer, Bedürfnisse mit Zeitverfall, Füttern, Streicheln, Schlafen, Stimmungs-Gesichter
-- ⏳ Grafik-Stil festlegen (KI-Referenzbild, siehe docs/GRAFIK.md)
+- ✅ Grafik-Stil und Bilder: Figur/Stimmungen, Ei, App-Icon, Nest, Windel und sechs Kleidungs-PNGs (siehe docs/GRAFIK.md)
 - ✅ Woche 3: Sterne verdienen, Kleiderschrank mit 14 Teilen, Anziehen per Tippen oder Ziehen
 - ⏭ Woche 4: Sammeln (Album, Sticker, weitere Eier/Labubus)
+
+## Übergabe
+
+Für die Weiterarbeit mit Claude Code: [docs/HANDOFF.md](docs/HANDOFF.md). Der aktuelle Entwicklungsstand liegt im Branch `claude/labubu-app-overview-812111`, nicht im alten `main`.

@@ -2,7 +2,7 @@ import Foundation
 
 /// Wo an Labubu ein Kleidungsstück sitzt. Pro Platz kann genau ein Teil getragen werden.
 enum OutfitSlot: String, Codable, CaseIterable {
-    case head, eyes, neck, hand
+    case body, head, eyes, neck, hand
 }
 
 struct OutfitItem: Identifiable, Equatable {
@@ -28,6 +28,9 @@ struct OutfitItem: Identifiable, Equatable {
         OutfitItem(id: "teddy", emoji: "🧸", slot: .hand, price: 3),
         OutfitItem(id: "wand", emoji: "🪄", slot: .hand, price: 4),
         OutfitItem(id: "crown", emoji: "👑", slot: .head, price: 5),
+        OutfitItem(id: "bowtie", emoji: "🎀", slot: .neck, price: 1),
+        OutfitItem(id: "mintVest", emoji: "🦺", slot: .body, price: 2),
+        OutfitItem(id: "roseVest", emoji: "🧥", slot: .body, price: 2),
     ]
 
     static func find(_ id: String) -> OutfitItem? {

@@ -19,17 +19,20 @@ struct GameView: View {
                 EggScene(viewModel: viewModel)
                     .transition(.opacity)
             case .hatched:
-                HatchedScene()
+                RoomScene(viewModel: viewModel)
                     .transition(.opacity)
             }
         }
         .animation(.easeInOut(duration: 0.6), value: viewModel.state.stage == .hatched)
         .overlay(alignment: .topTrailing) { parentGate }
         .confirmationDialog("Eltern-Bereich", isPresented: $showParentMenu, titleVisibility: .visible) {
+            if viewModel.state.stage == .hatched {
+                Button("Bedürfnisse leeren (zum Testen)") { viewModel.drainNeedsForTesting() }
+            }
             Button("Spiel zurücksetzen (neues Ei)", role: .destructive) { viewModel.resetGame() }
             Button("Abbrechen", role: .cancel) {}
         } message: {
-            Text("Der gesamte Fortschritt geht verloren.")
+            Text("Zurücksetzen löscht den gesamten Fortschritt.")
         }
     }
 

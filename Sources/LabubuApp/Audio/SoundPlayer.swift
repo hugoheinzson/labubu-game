@@ -1,7 +1,7 @@
 import AVFoundation
 
 enum GameSound: String, CaseIterable {
-    case tap, crack, hatch, giggle
+    case tap, crack, hatch, giggle, chomp, nope, click, snore
 }
 
 /// Spielt die kurzen Effekt-Töne aus `Resources`. Fehlt eine Datei, bleibt es einfach still.

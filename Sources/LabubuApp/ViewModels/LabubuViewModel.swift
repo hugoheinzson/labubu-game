@@ -8,10 +8,23 @@ final class LabubuViewModel: ObservableObject {
     }
 
     private let store: GameStore
+    private var ticker: AnyCancellable?
 
-    init(store: GameStore = .standard) {
+    init(store: GameStore = .standard, tickInterval: TimeInterval? = 2) {
         self.store = store
         self.state = store.load() ?? LabubuState()
+        tick()
+        if let tickInterval {
+            ticker = Timer.publish(every: tickInterval, on: .main, in: .common)
+                .autoconnect()
+                .sink { [weak self] now in self?.tick(now: now) }
+        }
+    }
+
+    /// Schreibt die Bedürfnisse auf die aktuelle Uhrzeit fort. Läuft regelmäßig und beim Zurückkehren in die App.
+    func tick(now: Date = Date()) {
+        guard state.stage == .hatched else { return }
+        state.advanceNeeds(to: now)
     }
 
     func tapEgg() {
@@ -22,8 +35,30 @@ final class LabubuViewModel: ObservableObject {
         state.finishHatching()
     }
 
-    /// Nur über den versteckten Eltern-Bereich erreichbar.
+    @discardableResult
+    func feed() -> Bool {
+        state.feed()
+    }
+
+    func pet() {
+        state.pet()
+    }
+
+    func toggleSleep() {
+        if state.isSleeping {
+            state.wakeUp()
+        } else {
+            state.sleep()
+        }
+    }
+
+    // MARK: Eltern-Bereich
+
     func resetGame() {
         state = LabubuState()
+    }
+
+    func drainNeedsForTesting() {
+        state.drainNeedsForTesting()
     }
 }

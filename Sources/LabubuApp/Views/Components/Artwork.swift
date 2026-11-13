@@ -9,4 +9,10 @@ enum Artwork: String {
     static func image(_ art: Artwork) -> UIImage? {
         UIImage(named: art.rawValue, in: .module, compatibleWith: nil)
     }
+
+    /// Erst `BabyLabubu-<stimmung>.png`, dann `BabyLabubu.png`.
+    static func labubu(mood: LabubuMood) -> UIImage? {
+        UIImage(named: "\(Artwork.babyLabubu.rawValue)-\(mood.rawValue)", in: .module, compatibleWith: nil)
+            ?? image(.babyLabubu)
+    }
 }

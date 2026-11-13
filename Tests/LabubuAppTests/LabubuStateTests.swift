@@ -64,12 +64,12 @@ struct GameStoreTests {
 
     @Test @MainActor func viewModelRestoresProgressAfterRestart() {
         let store = temporaryStore()
-        let first = LabubuViewModel(store: store)
+        let first = LabubuViewModel(store: store, tickInterval: nil)
         first.tapEgg()
         first.tapEgg()
-        let second = LabubuViewModel(store: store)
+        let second = LabubuViewModel(store: store, tickInterval: nil)
         #expect(second.state.eggTaps == 2)
         second.resetGame()
-        #expect(LabubuViewModel(store: store).state.eggTaps == 0)
+        #expect(LabubuViewModel(store: store, tickInterval: nil).state.eggTaps == 0)
     }
 }

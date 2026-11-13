@@ -14,6 +14,12 @@ Die App läuft schon ohne Bilder: Ei und Labubu sind als Platzhalter gezeichnet.
 |---|---|---|
 | `BabyLabubu.png` | Baby-Labubu, frontal, ganzer Körper, steht/sitzt | PNG, transparent, ca. 1024 × 1300 px, Seitenverhältnis ~4:5 |
 | `EggClosed.png` | Das geschlossene Ei, frontal | PNG, transparent, ca. 1024 × 1300 px, Seitenverhältnis ~4:5 |
+| `BabyLabubu-hungry.png` | Labubu mit weit offenem Mund, sabbert ein bisschen | wie `BabyLabubu.png`, gleiche Pose und Größe |
+| `BabyLabubu-tired.png` | halb geschlossene Augen, gähnt | wie oben |
+| `BabyLabubu-sad.png` | traurig, kleine Träne | wie oben |
+| `BabyLabubu-sleeping.png` | Augen zu, schläft im Stehen/Sitzen | wie oben |
+
+Die Stimmungsbilder sind optional. Fehlt eines, zeigt die App `BabyLabubu.png` (dann sieht man die Stimmung nur an der Denkblase).
 
 - Die Figur soll das Bild ausfüllen, mit nur wenig Rand.
 - Keinen Schatten auf den Boden zeichnen lassen, den fügt die App selbst hinzu.
@@ -27,4 +33,7 @@ Die App läuft schon ohne Bilder: Ei und Labubu sind als Platzhalter gezeichnet.
 **Ei**
 > In exactly the same style as the reference image: a large fluffy pastel egg with soft polka dots in mint, pink and lavender, front view, whole egg, no cracks. Isolated on a transparent background, no shadow, no text.
 
-Für später (Woche 2–4) nach demselben Muster: Gesichtsausdrücke (hungrig, müde, traurig), Essen (Erdbeere, Keks), Kleidung (Mütze, Schleife, Brille), weitere Labubus in anderen Fellfarben.
+**Stimmungen** (jeweils mit Referenzbild):
+> Exactly the same character, same pose, same size and framing as the reference image, but [hungry with its mouth wide open | very sleepy with half-closed eyes, yawning | sad with a small tear | fast asleep with closed eyes]. Transparent background, no shadow, no text.
+
+Für später (Woche 3–4) nach demselben Muster: Kleidung (Mütze, Schleife, Brille), weitere Labubus in anderen Fellfarben.

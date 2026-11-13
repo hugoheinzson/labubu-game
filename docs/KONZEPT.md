@@ -78,8 +78,8 @@ Jede Woche endet mit einer spielbaren Version. Was nicht fertig wird, fällt weg
 
 | Woche | bis | Inhalt |
 |---|---|---|
-| 1 | 20.11. | Ei-Phase kindgerecht (Tippen, Risse, Schlüpf-Animation, Ton), **Spielstand speichern**, Grafik-Stil festlegen + erste Bilder |
-| 2 | 27.11. | Labubus Zimmer + **Pflegen** (3 Bedürfnisse, Füttern, Streicheln, Schlafen, Stimmungs-Gesichter) |
+| ✅ 1 | 20.11. | Ei-Phase kindgerecht (Tippen, Risse, Schlüpf-Animation, Ton), **Spielstand speichern**, Grafik-Stil festlegen + erste Bilder |
+| ✅ 2 | 27.11. | Labubus Zimmer + **Pflegen** (3 Bedürfnisse, Füttern, Streicheln, Schlafen, Stimmungs-Gesichter) |
 | 3 | 04.12. | **Anziehen** (Kleiderschrank, Drag & Drop) + Sterne verdienen |
 | 4 | 11.12. | **Sammeln** (Album, Sticker, weitere Eier/Labubus) |
 | 5 | 18.12. | **Mini-Spiel** Früchte fangen (+ Memory, falls Zeit) |

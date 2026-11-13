@@ -27,7 +27,8 @@ App/
 Sources/LabubuApp/
 ├── LabubuRootView.swift       // öffentliche Einstiegs-View des Packages
 ├── Models/
-│   ├── LabubuState.swift      // Spielstand: Tipps am Ei, Risse, Schlüpfzeitpunkt
+│   ├── LabubuState.swift      // Spielstand: Ei, Schlüpfen, Pflege-Aktionen, Stimmung
+│   ├── Needs.swift            // Hunger, Spaß, Energie + Zeitverfall
 │   └── GameStore.swift        // speichert den Spielstand als JSON
 ├── ViewModels/
 │   └── LabubuViewModel.swift
@@ -37,10 +38,11 @@ Sources/LabubuApp/
 │   ├── GameView.swift         // Hintergrund, Szenenwechsel, versteckter Eltern-Bereich
 │   ├── StageLayout.swift      // gemeinsames Layout aller Szenen
 │   ├── EggScene.swift         // Ei antippen + Schlüpf-Animation
-│   ├── HatchedScene.swift     // Labubu ist da
-│   └── Components/            // Ei, Labubu, Glitzer, Konfetti, Herzen, Bild-Lookup
+│   ├── RoomScene.swift        // Labubus Zimmer: füttern, streicheln, schlafen
+│   └── Components/            // Ei, Labubu (mit Stimmungen), Zimmer-Teile, Effekte, Bild-Lookup
 └── Resources/                 // Bilder (optional) und Töne
-Tests/LabubuAppTests/          // Tests für Spiellogik und Speichern
+Tests/LabubuAppTests/          // Tests für Spiellogik, Bedürfnisse und Speichern
+tools/gen_sounds.py            // erzeugt die Effekt-Töne
 project.yml                    // XcodeGen-Konfiguration (iPad only)
 ```
 
@@ -48,7 +50,20 @@ Tests laufen in Xcode mit ⌘U.
 
 ## Eltern-Bereich
 
-Oben rechts in der Ecke **3 Sekunden gedrückt halten** öffnet den Eltern-Bereich, um das Spiel zurückzusetzen.
+Oben rechts in der Ecke **3 Sekunden gedrückt halten** öffnet den Eltern-Bereich:
+
+- **Bedürfnisse leeren (zum Testen):** macht Labubu sofort hungrig, müde und traurig, um die Pflege auszuprobieren.
+- **Spiel zurücksetzen:** neues Ei, aller Fortschritt weg.
+
+## So funktioniert die Pflege
+
+| Bedürfnis | Blase | Leer nach | So hilft man |
+|---|---|---|---|
+| Hunger | 🍓 | ~6 Stunden | Essen vom Teller antippen oder zu Labubu ziehen |
+| Spaß | 💖 | ~4 Stunden | Labubu antippen (kitzeln) oder drüberwischen (streicheln) |
+| Energie | 🌙 | ~10 Stunden | Licht aus 💡 – im Dunkeln schläft Labubu und ist nach ~30 Sekunden ausgeschlafen |
+
+Die Zeit läuft auch weiter, wenn die App zu ist. Ist ein Bedürfnis fast leer, pulsiert seine Blase und Labubu zeigt es im Gesicht und in einer Denkblase. Leer hat keine Folgen außer einem traurigen Gesicht.
 
 ## Grafiken
 
@@ -61,5 +76,6 @@ Zielgruppe, Spielidee und Wochenplan bis Weihnachten: [docs/KONZEPT.md](docs/KON
 ## Stand
 
 - ✅ Woche 1: kindgerechte Ei-Phase, Schlüpf-Animation, Töne, Spielstand speichern
+- ✅ Woche 2: Labubus Zimmer, Bedürfnisse mit Zeitverfall, Füttern, Streicheln, Schlafen, Stimmungs-Gesichter
 - ⏳ Grafik-Stil festlegen (KI-Referenzbild, siehe docs/GRAFIK.md)
-- ⏭ Woche 2: Labubus Zimmer + Pflegen
+- ⏭ Woche 3: Anziehen + Sterne verdienen

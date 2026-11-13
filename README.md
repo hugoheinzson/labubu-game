@@ -23,31 +23,43 @@ Die App ist zweigeteilt:
 
 ```
 App/
-└── LabubuGameApp.swift      // @main, zeigt LabubuRootView
+└── LabubuGameApp.swift        // @main, zeigt LabubuRootView
 Sources/LabubuApp/
-├── LabubuRootView.swift     // öffentliche Einstiegs-View des Packages
+├── LabubuRootView.swift       // öffentliche Einstiegs-View des Packages
 ├── Models/
-│   └── LabubuState.swift    // Zustand: Wärme, Pflege, Phase (Ei → Wärmen → Geschlüpft)
+│   ├── LabubuState.swift      // Spielstand: Tipps am Ei, Risse, Schlüpfzeitpunkt
+│   └── GameStore.swift        // speichert den Spielstand als JSON
 ├── ViewModels/
 │   └── LabubuViewModel.swift
+├── Audio/
+│   └── SoundPlayer.swift      // kurze Effekt-Töne
 ├── Views/
-│   └── EggView.swift        // Ei-Szene mit Wackel-Animation + Baby-Labubu-Endzustand
-└── Resources/
-    └── README.md            // welche Bilder erwartet werden
-project.yml                  // XcodeGen-Konfiguration (iPad only)
+│   ├── GameView.swift         // Hintergrund, Szenenwechsel, versteckter Eltern-Bereich
+│   ├── StageLayout.swift      // gemeinsames Layout aller Szenen
+│   ├── EggScene.swift         // Ei antippen + Schlüpf-Animation
+│   ├── HatchedScene.swift     // Labubu ist da
+│   └── Components/            // Ei, Labubu, Glitzer, Konfetti, Herzen, Bild-Lookup
+└── Resources/                 // Bilder (optional) und Töne
+Tests/LabubuAppTests/          // Tests für Spiellogik und Speichern
+project.yml                    // XcodeGen-Konfiguration (iPad only)
 ```
+
+Tests laufen in Xcode mit ⌘U.
+
+## Eltern-Bereich
+
+Oben rechts in der Ecke **3 Sekunden gedrückt halten** öffnet den Eltern-Bereich, um das Spiel zurückzusetzen.
 
 ## Grafiken
 
-Die App erwartet `EggClosed.png`, `EggIncubating.png` und `BabyLabubu.png` in `Sources/LabubuApp/Resources/` (Details dort im README). Fehlt ein Bild, zeigt sie ein SF-Symbol als Platzhalter – die App bleibt also spielbar.
+Ohne Bilddateien zeigt die App gezeichnete Platzhalter, sie ist also schon voll spielbar. Wie die KI-Grafiken entstehen und welche Dateien erwartet werden, steht in [docs/GRAFIK.md](docs/GRAFIK.md).
 
 ## Konzept & Fahrplan
 
 Zielgruppe, Spielidee und Wochenplan bis Weihnachten: [docs/KONZEPT.md](docs/KONZEPT.md).
 
-## Nächste Schritte
+## Stand
 
-1. Echte Grafiken erstellen und ablegen.
-2. Spielstand speichern (aktuell beginnt jeder Start wieder beim kalten Ei).
-3. Pflege nach dem Schlüpfen: Bedürfnisse (Hunger, Laune, Müdigkeit), Füttern, Streicheln.
-4. Mini-Games, Belohnungen/Sticker.
+- ✅ Woche 1: kindgerechte Ei-Phase, Schlüpf-Animation, Töne, Spielstand speichern
+- ⏳ Grafik-Stil festlegen (KI-Referenzbild, siehe docs/GRAFIK.md)
+- ⏭ Woche 2: Labubus Zimmer + Pflegen

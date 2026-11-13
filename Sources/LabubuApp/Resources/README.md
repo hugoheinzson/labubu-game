@@ -1,14 +1,14 @@
 # Resources
 
-Lege hier deine iPad-spezifischen Assets (z. B. Egg PNG, Labubu-Sprites, Sounds) ab. Beim Import in Xcode kannst du diesen Ordner oder ein `Assets.xcassets`-Verzeichnis hinterlegen. Für eine reine iPad-App stelle in der finalen Xcode-Projektdatei sicher, dass nur `iPad` als unterstützte Gerätefamilie gesetzt ist.
+## Bilder
 
-Fehlt eines der folgenden Bilder, zeigt die App automatisch ein SF-Symbol als Platzhalter.
+| Datei | Wird gezeigt | Fehlt sie … |
+|---|---|---|
+| `EggClosed.png` | Das Ei in der ersten Phase (Risse zeichnet die App darüber) | gezeichnetes Pastell-Ei |
+| `BabyLabubu.png` | Labubu ab dem Schlüpfen | gezeichnete Platzhalter-Figur |
 
-## EggClosed.png
-Foto/Rendering des geschlossenen fluffigen Eis. Wird in der allerersten Phase angezeigt und erhält die Wackel-Animation.
+Formate und KI-Prompts: [docs/GRAFIK.md](../../../docs/GRAFIK.md). Neue Bild-Namen werden in `Views/Components/Artwork.swift` eingetragen.
 
-## EggIncubating.png
-Darstellung des sich öffnenden Eis am Strand. Ersetzt den geschlossenen Zustand, sobald genug Wärme gesammelt wurde.
+## Töne
 
-## BabyLabubu.png
-Die geschlüpfte Labubu-Grafik für die finale Szene.
+`tap.wav`, `crack.wav`, `hatch.wav`, `giggle.wav` – selbst erzeugte Effekt-Töne (Sinus/Rauschen, keine fremden Rechte). Sie können durch eigene Dateien mit gleichem Namen ersetzt werden.
